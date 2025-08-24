@@ -1,16 +1,19 @@
+import React from 'react'
 import { Header } from '../../components/Header'
 import { Footer } from '../../components/Footer'
 import { getGlobals } from '../../lib/payload'
 import { Header as HeaderType, Footer as FooterType } from '@/payload-types'
 
-export default async function LocaleLayout({
-  children,
-  params: { locale },
-}: {
+type LayoutProps = {
   children: React.ReactNode
-  params: { locale: string }
-}) {
-  const { header, footer } = (await getGlobals(locale)) as { header: HeaderType; footer: FooterType; }
+  params: Promise<{ locale: string }>
+}
+
+export default async function LocaleLayout({ children, params }: LayoutProps) {
+  const { header, footer } = (await getGlobals((await params).locale)) as {
+    header: HeaderType
+    footer: FooterType
+  }
 
   return (
     <div className="flex flex-col min-h-screen">

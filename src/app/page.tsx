@@ -6,9 +6,9 @@ import Negotiator from 'negotiator'
 const locales = ['en', 'es']
 const defaultLocale = 'en'
 
-export default function RootPage() {
+export default async function RootPage() {
   const headersList = headers()
-  const acceptLanguage = headersList.get('accept-language')
+  const acceptLanguage = (await headersList).get('accept-language')
 
   let locale = defaultLocale
   if (acceptLanguage) {
@@ -17,6 +17,7 @@ export default function RootPage() {
     try {
       locale = match(languages, locales, defaultLocale)
     } catch (e) {
+      console.error("Error detecting locale:", e);
       console.warn("Could not match locale, falling back to default.");
     }
   }

@@ -648,7 +648,7 @@ export interface Auth {
   [k: string]: unknown;
 }
 
-
+//@ts-ignore module augmentation
 declare module 'payload' {
   export interface GeneratedTypes extends Config {}
 }

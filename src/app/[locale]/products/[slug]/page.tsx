@@ -3,8 +3,12 @@ import { notFound } from 'next/navigation'
 import Image from 'next/image'
 import { Media } from '@/payload-types'
 
-export default async function ProductPage({ params }: { params: { slug: string; locale: string } }) {
-  const product = await getProduct(params.slug, params.locale)
+type ProductProps = {
+  params: Promise<{ locale: string, slug: string }>
+}
+
+export default async function ProductPage({ params }: ProductProps) {
+  const product = await getProduct((await params).slug, (await params).locale)
 
   if (!product) {
     return notFound()
@@ -22,7 +26,7 @@ export default async function ProductPage({ params }: { params: { slug: string; 
         </div>
         <div>
           <h1 className="text-4xl font-bold mb-4">{name}</h1>
-          <div className="prose lg:prose-xl" dangerouslySetInnerHTML={{ __html: description as string }} />
+          <div className="prose lg:prose-xl" dangerouslySetInnerHTML={{ __html: description as unknown as string }} />
         </div>
       </div>
     </div>

@@ -1,13 +1,17 @@
 import PageRenderer from "./[...slug]/page"
 
-export default function HomePage({ params }: { params: { locale: string } }) {
-  const modifiedParams = { ...params, slug: ['home'] }
+type MetaDataProps = {
+  params: Promise<{ locale: string }>
+}
+
+export default async function HomePage({ params }: MetaDataProps) {
+  const modifiedParams = { ...params, locale: (await params).locale, slug: ['home'] }
   return PageRenderer({ params: modifiedParams })
 }
 
-export async function generateMetadata({ params: { locale } }: { params: { locale: string } }) {
+export async function generateMetadata({ params }: MetaDataProps) {
     return {
-        title: `Homepage | ${locale} My Awesome Site`,
+        title: `Homepage | ${(await (params)).locale} My Awesome Site`,
         description: 'Welcome to the homepage.'
     }
 }
