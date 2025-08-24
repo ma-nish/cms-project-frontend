@@ -1,15 +1,12 @@
-import { getPage } from '../../../lib/payload'
+import { getPage } from '@/lib/payload'
 import { notFound } from 'next/navigation'
+import { Blocks } from '@/components/Blocks'
 import { Page } from '@/payload-types'
-import { Blocks } from '../../../components/Blocks'
 
-type MetaDataProps = {
-  params: Promise<{ locale: string, slug: string[] }>
-}
-
-export async function generateMetadata({ params }: MetaDataProps) {
-  const slug = (await params).slug?.join('/') || 'home'
-  const page: Page | null = await getPage(slug, (await params).locale)
+export async function generateMetadata({ params }: { params: { slug: string[], locale: string } }) {
+  const resolvedParams = await params;
+  const slug = resolvedParams.slug?.join('/') || 'home'
+  const page: Page | null = await getPage(slug, resolvedParams.locale)
 
   if (!page) {
     return {}
@@ -21,9 +18,10 @@ export async function generateMetadata({ params }: MetaDataProps) {
   }
 }
 
-export default async function PageRenderer({ params }: MetaDataProps) {
-  const slug = (await params).slug?.join('/') || 'home'
-  const page = await getPage(slug, (await params).locale)
+export default async function PageRenderer({ params }: { params: { slug: string[], locale: string } }) {
+  const resolvedParams = await params;
+  const slug = resolvedParams.slug?.join('/') || 'home'
+  const page = await getPage(slug, resolvedParams.locale)
 
   if (!page) {
     return notFound()

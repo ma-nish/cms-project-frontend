@@ -1,17 +1,16 @@
-import PageRenderer from "./[...slug]/page"
+import PageRenderer from './[...slug]/page'
 
-type MetaDataProps = {
-  params: Promise<{ locale: string, slug: string[] }>
-}
-
-export default async function HomePage({ params }: MetaDataProps) {
-  const modifiedParams = { ...params, locale: (await params).locale, slug: ['home'] }
+export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {
+  const resolvedParams = await params;
+  const modifiedParams = { ...resolvedParams, slug: ['home'] }
   return PageRenderer({ params: modifiedParams })
 }
 
-export async function generateMetadata({ params }: MetaDataProps) {
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+    const resolvedParams = await params;
+
     return {
-        title: `Homepage | ${(await (params)).locale} My Awesome Site`,
+        title: `Homepage | ${resolvedParams.locale} My Awesome Site`,
         description: 'Welcome to the homepage.'
     }
 }

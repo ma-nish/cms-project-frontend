@@ -1,14 +1,11 @@
-import { getProduct } from '../../../../lib/payload'
+import { getProduct } from '@/lib/payload'
 import { notFound } from 'next/navigation'
 import Image from 'next/image'
 import { Media } from '@/payload-types'
 
-type ProductProps = {
-  params: Promise<{ locale: string, slug: string }>
-}
-
-export default async function ProductPage({ params }: ProductProps) {
-  const product = await getProduct((await params).slug, (await params).locale)
+export default async function ProductPage({ params }: { params: Promise<{ slug: string; locale: string }> }) {
+  const resolvedParams = await params;
+  const product = await getProduct(resolvedParams.slug, resolvedParams.locale)
 
   if (!product) {
     return notFound()
