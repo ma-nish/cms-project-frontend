@@ -3,9 +3,13 @@ import { notFound } from 'next/navigation'
 import { Page } from '@/payload-types'
 import { Blocks } from '../../../components/Blocks'
 
-export async function generateMetadata({ params }: { params: { slug: string[], locale: string } }) {
-  const slug = params.slug?.join('/') || 'home'
-  const page: Page | null = await getPage(slug, params.locale)
+type MetaDataProps = {
+  params: Promise<{ locale: string, slug: string[] }>
+}
+
+export async function generateMetadata({ params }: MetaDataProps) {
+  const slug = (await params).slug?.join('/') || 'home'
+  const page: Page | null = await getPage(slug, (await params).locale)
 
   if (!page) {
     return {}
@@ -17,9 +21,9 @@ export async function generateMetadata({ params }: { params: { slug: string[], l
   }
 }
 
-export default async function PageRenderer({ params }: { params: { slug: string[], locale: string } }) {
-  const slug = params.slug?.join('/') || 'home'
-  const page = await getPage(slug, params.locale)
+export default async function PageRenderer({ params }: MetaDataProps) {
+  const slug = (await params).slug?.join('/') || 'home'
+  const page = await getPage(slug, (await params).locale)
 
   if (!page) {
     return notFound()
