@@ -1,7 +1,7 @@
 import PageRenderer from "./[...slug]/page"
 
 type MetaDataProps = {
-  params: Promise<{ locale: string }>
+  params: Promise<{ locale: string, slug: string[] }>
 }
 
 export default async function HomePage({ params }: MetaDataProps) {
